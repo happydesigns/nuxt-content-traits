@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "nuxt-content-traits-playground",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "nuxt-content-traits": "latest",
+    "nuxt": "^4.4.2"
+  }
+}
