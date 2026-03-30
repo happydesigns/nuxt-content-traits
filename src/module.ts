@@ -1,19 +1,35 @@
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addImports, createResolver } from '@nuxt/kit'
 
-// Module options TypeScript interface definition
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ModuleOptions {}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-content-traits',
-    configKey: 'myModule',
+    configKey: 'contentTraits',
+    compatibility: {
+      nuxt: '^3.0.0',
+    },
   },
-  // Default configuration options of the Nuxt module
-  defaults: {},
-  setup(_options, _nuxt) {
+  setup() {
     const resolver = createResolver(import.meta.url)
 
-    // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
-    addPlugin(resolver.resolve('./runtime/plugin'))
+    addImports([
+      {
+        name: 'defineContentTrait',
+        as: 'defineContentTrait',
+        from: resolver.resolve('./runtime/utils'),
+      },
+      {
+        name: 'defineTraitCollection',
+        as: 'defineTraitCollection',
+        from: resolver.resolve('./runtime/utils'),
+      },
+      {
+        name: 'useCollectionTraits',
+        as: 'useCollectionTraits',
+        from: resolver.resolve('./runtime/composables/useCollectionTraits'),
+      },
+    ])
   },
 })
