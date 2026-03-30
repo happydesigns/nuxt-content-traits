@@ -7,9 +7,6 @@ export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-content-traits',
     configKey: 'contentTraits',
-    compatibility: {
-      nuxt: '^3.0.0',
-    },
   },
   setup() {
     const resolver = createResolver(import.meta.url)
