@@ -38,7 +38,9 @@
   },
   "dependencies": {
     "@nuxt/kit": "^4.4.2",
-    "better-sqlite3": "^12.8.0"
+    "better-sqlite3": "^12.8.0",
+    "defu": "^6.1.4",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@nuxt/content": "3.12.0",
@@ -54,7 +56,6 @@
     "nuxt": "^4.4.2",
     "typescript": "~6.0.2",
     "vitest": "^4.1.1",
-    "vue-tsc": "^3.2.6",
-    "zod": "^4.3.6"
+    "vue-tsc": "^3.2.6"
   }
 }
