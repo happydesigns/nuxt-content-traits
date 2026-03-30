@@ -1,16 +1,18 @@
 import { defu } from 'defu'
 import { z } from 'zod'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * A loose representation of Nuxt Content's defineCollection input,
  * omitting the schema since we generate it.
  */
 export interface BaseCollectionConfig {
-  type?: 'page' | 'data'
-  source?: unknown
-  meta?: Record<string, unknown>
-  [key: string]: unknown
+  type: 'page' | 'data'
+  source?: any
+  meta?: Record<string, any>
+  [key: string]: any
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * @template T
@@ -41,13 +43,18 @@ export function defineContentTrait<SchemaType>(
 }
 
 /**
- * @template T
+ * @template Type, T
  * @param baseConfig - The Nuxt Content collection config (excluding 'schema')
  * @param traits - A readonly tuple of active traits (e.g., `[traitA, traitB] as const`)
  * @param overrides - Optional overrides for custom schemas (Valibot/Yup) or config overrides
+ * @param [overrides.customSchema] - Optional custom schema (Valibot/Yup)
+ * @param [overrides.config] - Optional config overrides
  */
-export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]>(
-  baseConfig: BaseCollectionConfig,
+export function defineTraitCollection<
+  Type extends 'page' | 'data',
+  T extends readonly ContentTrait<unknown>[],
+>(
+  baseConfig: BaseCollectionConfig & { type: Type },
   traits: T,
   overrides?: {
     customSchema?: unknown
@@ -82,17 +89,24 @@ export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]
   const finalConfig = defu(overrides?.config || {}, mergedTraitConfig)
 
   // Use the custom schema if provided, otherwise fallback to the auto-merged Zod schema
-  const finalSchema = overrides?.customSchema ? overrides.customSchema : autoMergedSchema
+  let finalSchema = overrides?.customSchema ? overrides.customSchema : autoMergedSchema
+
+  // Inject traits metadata into the schema so it's available on every document
+  // This avoids adding invalid properties to the collection config while keeping metadata accessible
+  if (finalSchema && typeof (finalSchema as z.ZodObject<z.ZodRawShape>).extend === 'function') {
+    finalSchema = (finalSchema as z.ZodObject<z.ZodRawShape>).extend({
+      _traits: z.object({
+        active: z.array(z.string()),
+        config: z.unknown(),
+      }).default({
+        active: activeTraits,
+        config: finalConfig,
+      }),
+    })
+  }
 
   return {
     ...baseConfig,
     schema: finalSchema as MergeTraitShapes<T>,
-    meta: {
-      ...baseConfig.meta,
-      traits: {
-        active: activeTraits,
-        config: finalConfig,
-      },
-    },
   }
 }
