@@ -10,8 +10,9 @@ const valibotAssembled = defineTraitCollection(
   {
     customSchema: valibotTrait.schema,
     schemaWrapper: (schema) => {
+      const vSchema = schema as any
       return v.object({
-        ...schema.entries,
+        ...vSchema.entries,
         _traits: v.object({
           active: v.array(v.string()),
           config: v.any(),
