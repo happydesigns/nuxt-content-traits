@@ -36,10 +36,31 @@ export function defineContentTrait<SchemaType>(
 }
 
 /**
+ * Recursively infers a Zod schema from a plain configuration object.
+ */
+function inferZodSchema(val: unknown): z.ZodTypeAny {
+  if (val === null) return z.null()
+  if (typeof val === 'boolean') return z.boolean()
+  if (typeof val === 'number') return z.number()
+  if (typeof val === 'string') return z.string()
+  if (Array.isArray(val)) return z.array(z.any())
+  if (typeof val === 'object' && val !== null) {
+    const shape: Record<string, z.ZodTypeAny> = {}
+    for (const key in val) {
+      shape[key] = inferZodSchema((val as Record<string, unknown>)[key])
+    }
+    return z.object(shape)
+  }
+  return z.any()
+}
+
+/**
  * Assembles the schema and meta configuration from a list of traits.
  * @template T
  * @param traits - A readonly tuple of active traits
  * @param overrides - Optional overrides for custom schemas or config overrides
+ * @param [overrides.customSchema] - Optional custom schema (Valibot/Yup)
+ * @param [overrides.config] - Optional config overrides
  * @returns An object containing the merged schema with injected trait metadata
  */
 export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]>(
@@ -79,7 +100,7 @@ export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]
     finalSchema = (finalSchema as z.ZodObject<z.ZodRawShape>).extend({
       _traits: z.object({
         active: z.array(z.string()),
-        config: z.unknown(),
+        config: inferZodSchema(finalConfig),
       }).default({
         active: activeTraits,
         config: finalConfig,

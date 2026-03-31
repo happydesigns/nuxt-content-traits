@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { data: article } = await useAsyncData('article', () => queryCollection('article').first())
-const { traitConfig, hasTrait, activeTraits } = useCollectionTraits<{ ui?: { showCalendarIcon?: boolean } }>('article')
+const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('article')
 </script>
 
 <template>
