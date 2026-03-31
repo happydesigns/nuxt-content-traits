@@ -11,14 +11,15 @@ export const articleTraits = defineTraitCollection(
       ...seoTrait.schema.entries,
     }),
     schemaWrapper: (schema, _traitsSchema, traitsMetadata) => {
-      const vSchema = schema as any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const vSchema = schema as v.ObjectSchema<any, any>
       return v.object({
         ...vSchema.entries,
         // Inject _traits with default values using v.optional for Valibot
         _traits: v.optional(
           v.object({
             active: v.array(v.string()),
-            config: v.any(),
+            config: v.unknown(),
           }),
           traitsMetadata,
         ),
