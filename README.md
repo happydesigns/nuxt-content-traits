@@ -95,7 +95,7 @@ export default defineContentConfig({
     event: defineCollection({
       type: 'page',
       source: 'events/**/*.{md,yaml}',
-      ...eventTraits,
+      schema: eventTraits,
     }),
   },
 })

@@ -71,7 +71,7 @@ export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]
     config?: Record<string, unknown>
     schemaWrapper?: (schema: unknown, traitsSchema: z.ZodDefault<z.ZodObject<z.ZodRawShape>>, traitsMetadata: { active: string[], config: Record<string, unknown> }) => S
   },
-) {
+): MergeTraitShapes<T> & S {
   const activeTraits: string[] = []
   let mergedTraitConfig: Record<string, unknown> = {}
 
@@ -117,8 +117,5 @@ export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]
     finalSchema = overrides.schemaWrapper(finalSchema, traitsZodSchema, traitsMetadata)
   }
 
-  return {
-    schema: finalSchema as MergeTraitShapes<T> & S,
-    _traits: traitsMetadata,
-  }
+  return finalSchema as MergeTraitShapes<T> & S
 }

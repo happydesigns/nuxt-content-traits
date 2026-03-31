@@ -7,12 +7,12 @@ export default defineContentConfig({
     zodArticle: defineCollection({
       type: 'page',
       source: 'zod/**',
-      ...zodArticleTraits,
+      schema: zodArticleTraits,
     }),
     valibotArticle: defineCollection({
       type: 'page',
       source: 'valibot/**',
-      ...valibotArticleTraits,
+      schema: valibotArticleTraits,
     }),
   },
 })
