@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.0.2
+
+[compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.0.1...v0.0.2)
+
+### 💅 Refactors
+
+- Update defineTraitCollection to return schema directly ([9a371ff](https://github.com/happydesigns/nuxt-content-traits/commit/9a371ff))
+
+### 📖 Documentation
+
+- Update readme ([dd8a1e8](https://github.com/happydesigns/nuxt-content-traits/commit/dd8a1e8))
+
+### ❤️ Contributors
+
+- Jan Fröhlich ([@janfrl](https://github.com/janfrl))
+
 ## v0.0.1
 
 
