@@ -1,6 +1,6 @@
 {
   "name": "nuxt-content-traits",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Composable, feature-driven schema and configuration traits for Nuxt Content v3.",
   "repository": "happydesigns/nuxt-content-traits",
   "license": "MIT",
@@ -25,9 +25,6 @@
   },
   "files": [
     "dist"
-  ],
-  "workspaces": [
-    "playground"
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
