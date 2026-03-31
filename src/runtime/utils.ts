@@ -1,19 +1,6 @@
 import { defu } from 'defu'
 import { z } from 'zod'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/**
- * A loose representation of Nuxt Content's defineCollection input,
- * omitting the schema since we generate it.
- */
-export interface BaseCollectionConfig {
-  type: 'page' | 'data'
-  source?: any
-  meta?: Record<string, any>
-  [key: string]: any
-}
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
 /**
  * @template T
  */
@@ -36,6 +23,12 @@ export type MergeTraitShapes<T extends readonly ContentTrait<unknown>[]> = T ext
     : S
   : z.ZodObject<Record<string, never>>
 
+/**
+ * Defines a highly reusable content feature trait.
+ * @template SchemaType
+ * @param trait - The trait definition containing name, schema, and config
+ * @returns The strongly typed trait
+ */
 export function defineContentTrait<SchemaType>(
   trait: ContentTrait<SchemaType>,
 ): ContentTrait<SchemaType> {
@@ -43,18 +36,13 @@ export function defineContentTrait<SchemaType>(
 }
 
 /**
- * @template Type, T
- * @param baseConfig - The Nuxt Content collection config (excluding 'schema')
- * @param traits - A readonly tuple of active traits (e.g., `[traitA, traitB] as const`)
- * @param overrides - Optional overrides for custom schemas (Valibot/Yup) or config overrides
- * @param [overrides.customSchema] - Optional custom schema (Valibot/Yup)
- * @param [overrides.config] - Optional config overrides
+ * Assembles the schema and meta configuration from a list of traits.
+ * @template T
+ * @param traits - A readonly tuple of active traits
+ * @param overrides - Optional overrides for custom schemas or config overrides
+ * @returns An object containing the merged schema with injected trait metadata
  */
-export function defineTraitCollection<
-  Type extends 'page' | 'data',
-  T extends readonly ContentTrait<unknown>[],
->(
-  baseConfig: BaseCollectionConfig & { type: Type },
+export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]>(
   traits: T,
   overrides?: {
     customSchema?: unknown
@@ -64,7 +52,6 @@ export function defineTraitCollection<
   const activeTraits: string[] = []
   let mergedTraitConfig: Record<string, unknown> = {}
 
-  // Start with an empty Zod object for auto-merging
   let autoMergedSchema: unknown = z.object({})
 
   for (const trait of traits) {
@@ -74,7 +61,6 @@ export function defineTraitCollection<
       mergedTraitConfig = defu(mergedTraitConfig, trait.config)
     }
 
-    // Attempt to auto-merge if it looks like a Zod object
     if (
       !overrides?.customSchema
       && autoMergedSchema && typeof (autoMergedSchema as Record<string, unknown>).merge === 'function'
@@ -87,12 +73,8 @@ export function defineTraitCollection<
   }
 
   const finalConfig = defu(overrides?.config || {}, mergedTraitConfig)
-
-  // Use the custom schema if provided, otherwise fallback to the auto-merged Zod schema
   let finalSchema = overrides?.customSchema ? overrides.customSchema : autoMergedSchema
 
-  // Inject traits metadata into the schema so it's available on every document
-  // This avoids adding invalid properties to the collection config while keeping metadata accessible
   if (finalSchema && typeof (finalSchema as z.ZodObject<z.ZodRawShape>).extend === 'function') {
     finalSchema = (finalSchema as z.ZodObject<z.ZodRawShape>).extend({
       _traits: z.object({
@@ -106,7 +88,6 @@ export function defineTraitCollection<
   }
 
   return {
-    ...baseConfig,
     schema: finalSchema as MergeTraitShapes<T>,
   }
 }

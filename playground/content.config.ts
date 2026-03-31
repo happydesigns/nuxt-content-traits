@@ -1,8 +1,12 @@
 import { defineContentConfig, defineCollection } from '@nuxt/content'
-import { articleCollection } from './schemas/collections/article'
+import { articleTraits } from './schemas/collections/article'
 
 export default defineContentConfig({
   collections: {
-    article: defineCollection(articleCollection),
+    article: defineCollection({
+      type: 'page',
+      source: 'articles/**',
+      ...articleTraits,
+    }),
   },
 })
