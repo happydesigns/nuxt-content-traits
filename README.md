@@ -33,7 +33,7 @@ Create isolated features defining their Zod schema and default configurations.
 
 ```typescript
 // schemas/traits/dates.ts
-import { z } from 'zod/v4'
+import { z } from 'zod'
 import { defineContentTrait } from 'nuxt-content-traits/utils'
 
 export const datesTrait = defineContentTrait({
@@ -63,20 +63,18 @@ import { defineTraitCollection } from 'nuxt-content-traits/utils'
 import { datesTrait } from '../traits/dates'
 import { authorsTrait } from '../traits/authors'
 
-export const eventCollection = defineTraitCollection(
-  {
-    type: 'page',
-    source: 'events/**/*.{md,yaml}',
-  },
+export const eventTraits = defineTraitCollection(
   [datesTrait, authorsTrait] as const,
   {
     // Collection-level overrides deep-merge over trait defaults
-    query: {
-      order: [{ field: 'date', direction: 'ASC' }]
-    },
-    ui: {
-      authors: {
-        showSocials: false
+    config: {
+      query: {
+        order: [{ field: 'date', direction: 'ASC' }]
+      },
+      ui: {
+        authors: {
+          showSocials: false
+        }
       }
     }
   }
@@ -89,34 +87,38 @@ Keep your `content.config.ts` clean by registering the assembled collections.
 
 ```typescript
 // content.config.ts
-import { defineContentConfig } from '@nuxt/content'
-import { eventCollection } from './schemas/collections/event'
+import { defineContentConfig, defineCollection } from '@nuxt/content'
+import { eventTraits } from './schemas/collections/event'
 
 export default defineContentConfig({
   collections: {
-    event: eventCollection,
+    event: defineCollection({
+      type: 'page',
+      source: 'events/**/*.{md,yaml}',
+      ...eventTraits,
+    }),
   },
 })
 ```
 
 ### 4. Consume at Runtime
 
-The merged configuration and active traits are automatically injected into the collection's `meta` object, ready to be used in your components to conditionally render UI or dynamically construct optimized `queryCollection` calls.
+The merged configuration and active traits are automatically injected into the collection's `_traits` field. Use the `useCollectionTraits` composable to access them in your components.
 
 ```vue
 <script setup lang="ts">
-const appConfig = useAppConfig()
-// Extract the deeply merged config from the collection's meta
-const eventTraits = appConfig.content?.collections?.event?.meta?.traits
+// Extract the deeply merged config and active traits
+const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('event')
 
-const hasDates = eventTraits?.active?.includes('dates')
-const dateConfig = eventTraits?.config?.ui?.showCalendarIcon
+const hasDates = hasTrait('dates')
+const showIcon = traitConfig.ui?.showCalendarIcon
 </script>
 
 <template>
   <header>
     <div v-if="hasDates">
-      </div>
+      <span v-if="showIcon">📅</span>
+    </div>
   </header>
 </template>
 ```
