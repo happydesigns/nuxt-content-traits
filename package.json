@@ -1,6 +1,6 @@
 {
   "name": "nuxt-content-traits",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Composable, feature-driven schema and configuration traits for Nuxt Content v3.",
   "repository": "happydesigns/nuxt-content-traits",
   "license": "MIT",
@@ -11,8 +11,8 @@
       "import": "./dist/module.mjs"
     },
     "./utils": {
-      "types": "./dist/runtime/utils.d.mts",
-      "import": "./dist/runtime/utils.mjs"
+      "types": "./dist/runtime/utils.d.ts",
+      "import": "./dist/runtime/utils.js"
     }
   },
   "main": "./dist/module.mjs",
@@ -25,9 +25,6 @@
   },
   "files": [
     "dist"
-  ],
-  "workspaces": [
-    "playground"
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
@@ -55,10 +52,12 @@
     "@nuxt/schema": "^4.4.2",
     "@nuxt/test-utils": "^4.0.0",
     "@types/node": "latest",
+    "@valibot/to-json-schema": "^1.6.0",
     "changelogen": "^0.6.2",
     "eslint": "^10.1.0",
     "nuxt": "^4.4.2",
     "typescript": "~6.0.2",
+    "valibot": "^1.3.1",
     "vitest": "^4.1.1",
     "vue-tsc": "^3.2.6"
   }

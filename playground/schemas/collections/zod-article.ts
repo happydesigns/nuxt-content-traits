@@ -1,6 +1,6 @@
 import { defineTraitCollection } from '../../../src/runtime/utils'
-import { datesTrait } from '../traits/dates'
-import { seoTrait } from '../traits/seo'
+import { datesTrait } from '../traits/zod/dates'
+import { seoTrait } from '../traits/zod/seo'
 
 export const articleTraits = defineTraitCollection(
   [datesTrait, seoTrait] as const,

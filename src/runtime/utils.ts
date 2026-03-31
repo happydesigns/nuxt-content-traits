@@ -56,18 +56,20 @@ function inferZodSchema(val: unknown): z.ZodTypeAny {
 
 /**
  * Assembles the schema and meta configuration from a list of traits.
- * @template T
+ * @template T, S
  * @param traits - A readonly tuple of active traits
  * @param overrides - Optional overrides for custom schemas or config overrides
  * @param [overrides.customSchema] - Optional custom schema (Valibot/Yup)
  * @param [overrides.config] - Optional config overrides
+ * @param [overrides.schemaWrapper] - Optional function to wrap the final schema (useful for non-Zod validators)
  * @returns An object containing the merged schema with injected trait metadata
  */
-export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]>(
+export function defineTraitCollection<T extends readonly ContentTrait<unknown>[], S = unknown>(
   traits: T,
   overrides?: {
-    customSchema?: unknown
+    customSchema?: S
     config?: Record<string, unknown>
+    schemaWrapper?: (schema: unknown, traitsSchema: z.ZodDefault<z.ZodObject<z.ZodRawShape>>, traitsMetadata: { active: string[], config: Record<string, unknown> }) => S
   },
 ) {
   const activeTraits: string[] = []
@@ -96,19 +98,27 @@ export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]
   const finalConfig = defu(overrides?.config || {}, mergedTraitConfig)
   let finalSchema = overrides?.customSchema ? overrides.customSchema : autoMergedSchema
 
-  if (finalSchema && typeof (finalSchema as z.ZodObject<z.ZodRawShape>).extend === 'function') {
+  const traitsMetadata = {
+    active: activeTraits,
+    config: finalConfig,
+  }
+
+  const traitsZodSchema = z.object({
+    active: z.array(z.string()),
+    config: inferZodSchema(finalConfig),
+  }).default(traitsMetadata)
+
+  if (!overrides?.schemaWrapper && finalSchema && typeof (finalSchema as z.ZodObject<z.ZodRawShape>).extend === 'function') {
     finalSchema = (finalSchema as z.ZodObject<z.ZodRawShape>).extend({
-      _traits: z.object({
-        active: z.array(z.string()),
-        config: inferZodSchema(finalConfig),
-      }).default({
-        active: activeTraits,
-        config: finalConfig,
-      }),
+      _traits: traitsZodSchema,
     })
+  }
+  else if (overrides?.schemaWrapper) {
+    finalSchema = overrides.schemaWrapper(finalSchema, traitsZodSchema, traitsMetadata)
   }
 
   return {
-    schema: finalSchema as MergeTraitShapes<T>,
+    schema: finalSchema as MergeTraitShapes<T> & S,
+    _traits: traitsMetadata,
   }
 }

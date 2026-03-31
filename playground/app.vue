@@ -1,56 +1,35 @@
-<script setup lang="ts">
-const { data: article } = await useAsyncData('article', () => queryCollection('article').first())
-const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('article')
-</script>
-
 <template>
-  <div class="p-8 max-w-2xl mx-auto space-y-6">
-    <div
-      v-if="article"
-      class="border p-6 rounded-lg shadow-sm"
-    >
-      <div
-        v-if="hasTrait('seo')"
-        class="mb-4"
-      >
-        <h1 class="text-3xl font-bold">
-          {{ article.title }}
-        </h1>
-        <p
-          v-if="article.description"
-          class="text-gray-600 italic mt-1"
-        >
-          {{ article.description }}
-        </p>
+  <div class="min-h-screen bg-gray-50 text-gray-900 font-sans">
+    <nav class="bg-white border-b sticky top-0 z-10">
+      <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="font-bold text-lg tracking-tight">
+          Nuxt Content Traits
+        </div>
+        <div class="flex gap-6">
+          <NuxtLink
+            to="/"
+            class="text-sm font-medium hover:text-blue-600 transition-colors"
+            active-class="text-blue-600 underline underline-offset-8"
+          >
+            Zod Demo
+          </NuxtLink>
+          <NuxtLink
+            to="/valibot"
+            class="text-sm font-medium hover:text-blue-600 transition-colors"
+            active-class="text-blue-600 underline underline-offset-8"
+          >
+            Valibot Demo
+          </NuxtLink>
+        </div>
       </div>
+    </nav>
 
-      <div
-        v-if="hasTrait('dates')"
-        class="flex items-center gap-2 text-sm text-gray-500"
-      >
-        <span v-if="traitConfig.ui?.showCalendarIcon">📅</span>
-        <time :datetime="article.date">{{ article.date }}</time>
-        <span v-if="article.dateEnd"> – <time :datetime="article.dateEnd">{{ article.dateEnd }}</time></span>
-      </div>
-
-      <div class="prose mt-6">
-        <ContentRenderer :value="article" />
-      </div>
-    </div>
-
-    <div
-      v-else
-      class="text-red-500"
-    >
-      Failed to load article.
-    </div>
-
-    <div class="mt-8 pt-8 border-t text-xs font-mono text-gray-400">
-      <h2 class="uppercase font-bold mb-2">
-        Debug Meta
-      </h2>
-      <p>Active Traits: {{ activeTraits }}</p>
-      <p>Trait Config: {{ traitConfig }}</p>
-    </div>
+    <main class="p-8 max-w-4xl mx-auto">
+      <NuxtPage />
+    </main>
   </div>
 </template>
+
+<style>
+@import "https://cdn.jsdelivr.net/npm/@tailwindcss/typography@0.5.10/dist/typography.min.css";
+</style>
