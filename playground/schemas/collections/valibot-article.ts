@@ -10,14 +10,18 @@ export const articleTraits = defineTraitCollection(
       ...datesTrait.schema.entries,
       ...seoTrait.schema.entries,
     }),
-    schemaWrapper: (schema, traitsSchema) => {
+    schemaWrapper: (schema, _traitsSchema, traitsMetadata) => {
       const vSchema = schema as any
       return v.object({
         ...vSchema.entries,
-        _traits: v.object({
-          active: v.array(v.string()),
-          config: v.any(),
-        }),
+        // Inject _traits with default values using v.optional for Valibot
+        _traits: v.optional(
+          v.object({
+            active: v.array(v.string()),
+            config: v.any(),
+          }),
+          traitsMetadata,
+        ),
       })
     },
     config: {

@@ -69,7 +69,7 @@ export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]
   overrides?: {
     customSchema?: S
     config?: Record<string, unknown>
-    schemaWrapper?: (schema: unknown, traitsSchema: z.ZodDefault<z.ZodObject<z.ZodRawShape>>) => S
+    schemaWrapper?: (schema: unknown, traitsSchema: z.ZodDefault<z.ZodObject<z.ZodRawShape>>, traitsMetadata: { active: string[], config: Record<string, unknown> }) => S
   },
 ) {
   const activeTraits: string[] = []
@@ -114,7 +114,7 @@ export function defineTraitCollection<T extends readonly ContentTrait<unknown>[]
     })
   }
   else if (overrides?.schemaWrapper) {
-    finalSchema = overrides.schemaWrapper(finalSchema, traitsZodSchema)
+    finalSchema = overrides.schemaWrapper(finalSchema, traitsZodSchema, traitsMetadata)
   }
 
   return {
