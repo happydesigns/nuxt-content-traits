@@ -1,23 +1,25 @@
 <script setup lang="ts">
 const { data: article } = await useAsyncData('valibot-article', () => queryCollection('valibotArticle').first())
-const { traitConfig, hasTrait, activeTraits } = useCollectionTraits<'valibotArticle', { valibot?: { enabled?: boolean } }>('valibotArticle')
+const { traitConfig, hasTrait, activeTraits } = useCollectionTraits<'valibotArticle', { ui?: { showCalendarIcon?: boolean } }>('valibotArticle')
 </script>
 
 <template>
   <div class="space-y-6">
     <header>
       <h1 class="text-2xl font-serif text-blue-600">Valibot Traits Demo</h1>
-      <p class="text-gray-500">Demonstrating trait extraction from a Valibot-powered collection.</p>
+      <p class="text-gray-500">Demonstrating same example traits using Valibot schemas.</p>
     </header>
 
     <div v-if="article" class="border p-6 rounded-lg shadow-sm bg-white border-blue-100">
-      <div class="mb-4">
-        <h2 class="text-3xl font-bold text-blue-900">Valibot Item</h2>
-        <p class="text-gray-600 italic mt-1">Field from Valibot schema: {{ article.valibotField }}</p>
+      <div v-if="hasTrait('seo')" class="mb-4">
+        <h2 class="text-3xl font-bold text-blue-900">{{ article.title }}</h2>
+        <p v-if="article.description" class="text-gray-600 italic mt-1">{{ article.description }}</p>
       </div>
 
-      <div v-if="hasTrait('valibotFeature')" class="p-4 bg-blue-50 rounded border border-blue-200 text-blue-800 text-sm">
-        <span v-if="traitConfig.valibot?.enabled">✅ Valibot Trait Logic Active (Inferred)</span>
+      <div v-if="hasTrait('dates')" class="flex items-center gap-2 text-sm text-gray-500 border-b pb-4 mb-4">
+        <span v-if="traitConfig.ui?.showCalendarIcon">📅</span>
+        <time :datetime="article.date">{{ article.date }}</time>
+        <span v-if="article.dateEnd"> – <time :datetime="article.dateEnd">{{ article.dateEnd }}</time></span>
       </div>
 
       <div class="prose max-w-none mt-6">

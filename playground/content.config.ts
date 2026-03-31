@@ -1,39 +1,18 @@
-import * as v from 'valibot'
 import { defineContentConfig, defineCollection } from '@nuxt/content'
-import { articleTraits } from './schemas/collections/article'
-import { valibotTrait } from './schemas/traits/valibot-test'
-import { defineTraitCollection } from '../src/runtime/utils'
-
-// Using the new schemaWrapper to demonstrate clean Valibot integration
-const valibotAssembled = defineTraitCollection(
-  [valibotTrait] as const,
-  {
-    customSchema: valibotTrait.schema,
-    schemaWrapper: (schema) => {
-      const vSchema = schema as any
-      return v.object({
-        ...vSchema.entries,
-        _traits: v.object({
-          active: v.array(v.string()),
-          config: v.any(),
-        }),
-      })
-    },
-  },
-)
+import { articleTraits as zodArticleTraits } from './schemas/collections/zod-article'
+import { articleTraits as valibotArticleTraits } from './schemas/collections/valibot-article'
 
 export default defineContentConfig({
   collections: {
-    article: defineCollection({
+    zodArticle: defineCollection({
       type: 'page',
-      source: 'articles/**',
-      ...articleTraits,
+      source: 'zod/**',
+      ...zodArticleTraits,
     }),
-    // Now using the properly assembled Valibot traits
     valibotArticle: defineCollection({
       type: 'page',
       source: 'valibot/**',
-      ...valibotAssembled,
+      ...valibotArticleTraits,
     }),
   },
 })

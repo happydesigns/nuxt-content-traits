@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { defineContentTrait } from '../../../src/runtime/utils'
+import { defineContentTrait } from '../../../../src/runtime/utils'
 
 export const datesTrait = defineContentTrait({
   name: 'dates',

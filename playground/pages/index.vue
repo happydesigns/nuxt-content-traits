@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const { data: article } = await useAsyncData('article', () => queryCollection('article').first())
-const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('article')
+const { data: article } = await useAsyncData('article', () => queryCollection('zodArticle').first())
+const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('zodArticle')
 </script>
 
 <template>
