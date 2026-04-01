@@ -12,9 +12,9 @@ interface TraitsMeta {
 /**
  * Type helper to extract and merge trait configurations from AppConfig.
  */
-export type InferTraitConfig<K extends keyof Collections> = 
-  (AppConfig extends { content?: { traits?: infer T } } ? T : any) &
-  (AppConfig extends { content?: { collections?: { [P in K]?: infer C } } } ? C : any)
+export type InferTraitConfig<K extends keyof Collections>
+  = (AppConfig extends { content?: { traits?: infer T } } ? T : Record<string, unknown>)
+    & (AppConfig extends { content?: { collections?: { [P in K]?: infer C } } } ? C : Record<string, unknown>)
 
 /**
  * Provides reactive trait configuration for a Nuxt Content collection.
@@ -28,12 +28,12 @@ export function useCollectionTraits<K extends keyof Collections>(collectionName:
   traitConfig: ComputedRef<InferTraitConfig<K>>
   hasTrait: (name: string) => boolean
 } {
-  const appConfig = useAppConfig() as AppConfig & { content?: { traits?: any, collections?: Record<string, any> } }
+  const appConfig = useAppConfig() as AppConfig & { content?: { traits?: Record<string, unknown>, collections?: Record<string, Record<string, unknown>> } }
 
   const { data: meta } = useAsyncData(`traits-meta-${String(collectionName)}`, async () => {
     const doc = await queryCollection(collectionName).first()
     const traits = (doc as { meta?: { traits?: TraitsMeta } } | null)?.meta?.traits
-    return traits ?? { active: [] as string[], config: {} as Record<string, any> }
+    return traits ?? { active: [] as string[], config: {} as Record<string, unknown> }
   })
 
   const activeTraits = computed<string[]>(() => meta.value?.active ?? [])
