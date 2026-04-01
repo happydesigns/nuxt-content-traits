@@ -27,96 +27,81 @@ npx nuxt module add nuxt-content-traits
 
 ## Usage
 
-### 1. Define Traits
+### 1. Define Traits and Collections
 
-Create isolated features defining their Zod schema and default configurations.
-
-```typescript
-// schemas/traits/dates.ts
-import { z } from 'zod'
-import { defineContentTrait } from 'nuxt-content-traits/utils'
-
-export const datesTrait = defineContentTrait({
-  name: 'dates',
-  schema: z.object({
-    date: z.iso.date(),
-    dateEnd: z.iso.date().optional(),
-  }),
-  config: {
-    query: {
-      order: [{ field: 'date', direction: 'DESC' }],
-    },
-    ui: {
-      showCalendarIcon: true,
-    }
-  },
-})
-```
-
-### 2. Assemble Collections
-
-Compose your traits into Nuxt Content collections. The `as const` tuple ensures flawless TypeScript inference of the combined schemas.
-
-```typescript
-// schemas/collections/event.ts
-import { defineTraitCollection } from 'nuxt-content-traits/utils'
-import { datesTrait } from '../traits/dates'
-import { authorsTrait } from '../traits/authors'
-
-export const eventTraits = defineTraitCollection(
-  [datesTrait, authorsTrait] as const,
-  {
-    // Collection-level overrides deep-merge over trait defaults
-    config: {
-      query: {
-        order: [{ field: 'date', direction: 'ASC' }]
-      },
-      ui: {
-        authors: {
-          showSocials: false
-        }
-      }
-    }
-  }
-)
-```
-
-### 3. Register in Nuxt Content
-
-Keep your `content.config.ts` clean by registering the assembled collections.
+Use `defineContentConfig` from `nuxt-content-traits/utils` to register shared traits and compose them into collections. Traits are defined once and referenced by name.
 
 ```typescript
 // content.config.ts
-import { defineContentConfig, defineCollection } from '@nuxt/content'
-import { eventTraits } from './schemas/collections/event'
+import { z } from 'zod'
+import { defineContentConfig, defineTrait } from 'nuxt-content-traits/utils'
 
 export default defineContentConfig({
-  collections: {
-    event: defineCollection({
-      type: 'page',
-      source: 'events/**/*.{md,yaml}',
-      schema: eventTraits,
+  // 1. Register shared traits
+  traits: {
+    dates: defineTrait({
+      schema: z.object({
+        date: z.string(),
+        dateEnd: z.string().optional(),
+      })
     }),
+    seo: defineTrait({
+      schema: z.object({
+        title: z.string().optional(),
+        description: z.string().optional(),
+      })
+    })
   },
+
+  // 2. Compose into collections
+  collections: {
+    article: {
+      type: 'page',
+      source: 'articles/**/*.md',
+      traits: ['dates', 'seo'] // Referenced by key
+    }
+  }
 })
 ```
 
-### 4. Consume at Runtime
+### 2. Configure Traits
 
-The merged configuration and active traits are automatically injected into the collection's `_traits` field. Use the `useCollectionTraits` composable to access them in your components.
+Trait configurations and UI defaults live in `app.config.ts`. This allows you to provide global defaults that can be overridden per collection.
+
+```typescript
+// app.config.ts
+export default defineAppConfig({
+  content: {
+    traits: {
+      // Global trait settings
+      ui: { darkMode: true }
+    },
+    collections: {
+      article: {
+        // Collection-specific overrides
+        ui: { showCalendarIcon: false }
+      }
+    }
+  }
+})
+```
+
+### 3. Consume at Runtime
+
+Trait metadata is automatically injected into the collection's `meta.traits` field. Use the `useCollectionTraits` composable to access deeply merged configurations and active traits in your components.
 
 ```vue
 <script setup lang="ts">
 // Extract the deeply merged config and active traits
-const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('event')
+const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('article')
 
-const hasDates = hasTrait('dates')
+const isSeoActive = hasTrait('seo')
 const showIcon = traitConfig.ui?.showCalendarIcon
 </script>
 
 <template>
   <header>
-    <div v-if="hasDates">
+    <div v-if="isSeoActive">
       <span v-if="showIcon">📅</span>
     </div>
   </header>
