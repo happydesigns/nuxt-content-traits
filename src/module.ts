@@ -13,13 +13,13 @@ export default defineNuxtModule<ModuleOptions>({
 
     addImports([
       {
-        name: 'defineContentTrait',
-        as: 'defineContentTrait',
+        name: 'defineTrait',
+        as: 'defineTrait',
         from: resolver.resolve('./runtime/utils'),
       },
       {
-        name: 'defineCollection',
-        as: 'defineCollection',
+        name: 'defineContentConfig',
+        as: 'defineContentConfig',
         from: resolver.resolve('./runtime/utils'),
       },
       {
