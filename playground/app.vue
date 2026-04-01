@@ -11,14 +11,7 @@
             class="text-sm font-medium hover:text-blue-600 transition-colors"
             active-class="text-blue-600 underline underline-offset-8"
           >
-            Zod Demo
-          </NuxtLink>
-          <NuxtLink
-            to="/valibot"
-            class="text-sm font-medium hover:text-blue-600 transition-colors"
-            active-class="text-blue-600 underline underline-offset-8"
-          >
-            Valibot Demo
+            Article Demo
           </NuxtLink>
         </div>
       </div>

@@ -1,18 +1,14 @@
-import { defineContentConfig, defineCollection } from '@nuxt/content'
-import { articleTraits as zodArticleTraits } from './schemas/collections/zod-article'
-import { articleTraits as valibotArticleTraits } from './schemas/collections/valibot-article'
+import { defineContentConfig } from '@nuxt/content'
+import { defineCollection } from 'nuxt-content-traits/utils'
+import { datesTrait } from './schemas/traits/dates'
+import { seoTrait } from './schemas/traits/seo'
 
 export default defineContentConfig({
   collections: {
-    zodArticle: defineCollection({
+    article: defineCollection({
       type: 'page',
       source: 'zod/**',
-      schema: zodArticleTraits,
-    }),
-    valibotArticle: defineCollection({
-      type: 'page',
-      source: 'valibot/**',
-      schema: valibotArticleTraits,
+      traits: [datesTrait, seoTrait],
     }),
   },
 })

@@ -1,16 +1,16 @@
 <script setup lang="ts">
-const { data: article } = await useAsyncData('article', () => queryCollection('zodArticle').first())
-const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('zodArticle')
+const { data: article } = await useAsyncData('article', () => queryCollection('article').first())
+const { traitConfig, hasTrait, activeTraits } = useCollectionTraits('article')
 </script>
 
 <template>
   <div class="space-y-6">
     <header>
       <h1 class="text-2xl font-serif">
-        Zod Traits Demo
+        Native Wrapper Demo
       </h1>
       <p class="text-gray-500">
-        Demonstrating automatic inference with Zod schemas.
+        Demonstrating trait composition with the native defineCollection wrapper.
       </p>
     </header>
 

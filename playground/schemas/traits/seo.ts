@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { defineContentTrait } from '../../../../src/runtime/utils'
+import { defineContentTrait } from 'nuxt-content-traits/utils'
 
 export const seoTrait = defineContentTrait({
   name: 'seo',
