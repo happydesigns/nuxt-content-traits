@@ -18,8 +18,8 @@ export default defineNuxtModule<ModuleOptions>({
         from: resolver.resolve('./runtime/utils'),
       },
       {
-        name: 'defineTraitCollection',
-        as: 'defineTraitCollection',
+        name: 'defineCollection',
+        as: 'defineCollection',
         from: resolver.resolve('./runtime/utils'),
       },
       {

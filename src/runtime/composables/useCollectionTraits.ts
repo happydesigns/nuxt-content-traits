@@ -1,42 +1,44 @@
 import { computed } from 'vue'
-import { useAsyncData, queryCollection } from '#imports'
+import { useAsyncData, useAppConfig, queryCollection } from '#imports'
+import { defu } from 'defu'
 import type { Collections } from '@nuxt/content'
 
-interface TraitDocument {
-  _traits?: {
-    active?: string[]
-    config?: Record<string, unknown>
-  }
+interface TraitsMeta {
+  active: string[]
+  config: Record<string, unknown>
+}
+
+interface ContentAppConfig {
+  traits?: Record<string, unknown>
+  collections?: Record<string, Record<string, unknown>>
 }
 
 /**
- * Extracts the trait configuration and active features for a given Nuxt Content collection.
- * @template K - The name of the collection
- * @template T - Optional manual override for the trait configuration type
- * @param collectionName The name of the collection (e.g., 'article', 'event')
+ * Provides reactive trait configuration for a Nuxt Content collection.
+ * Fetches trait defaults from `meta.traits` on the first collection document,
+ * then deep-merges them with global and collection-level overrides from `app.config.ts`.
+ * @template K - The collection name key
+ * @param collectionName - The name of the collection
  */
-export function useCollectionTraits<K extends keyof Collections, T = unknown>(collectionName: K) {
-  // We fetch the first document to get the trait configuration.
-  const { data: document } = useAsyncData(`collection-meta-${collectionName}`, async () => {
-    return await queryCollection(collectionName).first()
+export function useCollectionTraits<K extends keyof Collections>(collectionName: K) {
+  const appConfig = useAppConfig() as { content?: ContentAppConfig }
+
+  const { data: meta } = useAsyncData(`traits-meta-${String(collectionName)}`, async () => {
+    const doc = await queryCollection(collectionName).first()
+    const traits = (doc as { meta?: { traits?: TraitsMeta } } | null)?.meta?.traits
+    return traits ?? { active: [] as string[], config: {} as Record<string, unknown> }
   })
 
-  const activeTraits = computed<string[]>(() => (document.value as TraitDocument)?._traits?.active ?? [])
+  const activeTraits = computed<string[]>(() => meta.value?.active ?? [])
 
-  // We infer the configuration type directly from the generated Collections interface,
-  // but allow for a manual override if T is provided.
   const traitConfig = computed(() => {
-    type InferredConfig = Collections[K] extends { _traits: { config: infer C } } ? C : Record<string, unknown>
-    // If T was not provided (remains unknown), use the inferred type.
-    type FinalConfig = unknown extends T ? InferredConfig : T
-    return (document.value as TraitDocument)?._traits?.config as FinalConfig
+    const defaults = meta.value?.config ?? {}
+    const globalOverrides = appConfig.content?.traits ?? {}
+    const collectionOverrides = appConfig.content?.collections?.[String(collectionName)] ?? {}
+    return defu(collectionOverrides, globalOverrides, defaults)
   })
 
-  const hasTrait = (traitName: string) => activeTraits.value.includes(traitName)
+  const hasTrait = (name: string): boolean => activeTraits.value.includes(name)
 
-  return {
-    activeTraits,
-    traitConfig,
-    hasTrait,
-  }
+  return { activeTraits, traitConfig, hasTrait }
 }
