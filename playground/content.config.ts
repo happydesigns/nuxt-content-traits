@@ -1,14 +1,26 @@
-import { defineContentConfig } from '@nuxt/content'
-import { defineCollection } from 'nuxt-content-traits/utils'
-import { datesTrait } from './schemas/traits/dates'
-import { seoTrait } from './schemas/traits/seo'
+import { z } from 'zod'
+import { defineContentConfig, defineTrait } from 'nuxt-content-traits/utils'
 
 export default defineContentConfig({
+  traits: {
+    dates: defineTrait({
+      schema: z.object({
+        date: z.string(),
+        dateEnd: z.string().optional(),
+      }),
+    }),
+    seo: defineTrait({
+      schema: z.object({
+        title: z.string().optional(),
+        description: z.string().optional(),
+      }),
+    }),
+  },
   collections: {
-    article: defineCollection({
+    article: {
       type: 'page',
       source: 'zod/**',
-      traits: [datesTrait, seoTrait],
-    }),
+      traits: ['dates', 'seo'],
+    },
   },
 })
