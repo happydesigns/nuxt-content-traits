@@ -15,17 +15,12 @@ export const valibotAdapter: SchemaAdapter<ValibotObj> = {
   extendWithTraitsMeta(schema, metadata: TraitsMeta) {
     return v.object({
       ...schema.entries,
-      meta: v.optional(
-        v.looseObject({
-          traits: v.optional(
-            v.object({
-              active: v.array(v.string()),
-              config: v.record(v.string(), v.unknown()),
-            }),
-            metadata,
-          ),
+      _traits: v.optional(
+        v.object({
+          active: v.array(v.string()),
+          config: v.record(v.string(), v.unknown()),
         }),
-        { traits: metadata },
+        metadata,
       ),
     })
   },

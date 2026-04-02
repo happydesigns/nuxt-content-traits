@@ -14,12 +14,10 @@ export const zodAdapter: SchemaAdapter<ZodObj> = {
 
   extendWithTraitsMeta(schema, metadata: TraitsMeta) {
     return schema.extend({
-      meta: z.looseObject({
-        traits: z.object({
-          active: z.array(z.string()),
-          config: z.record(z.string(), z.unknown()),
-        }).default(metadata),
-      }).default({ traits: metadata }),
+      _traits: z.object({
+        active: z.array(z.string()),
+        config: z.record(z.string(), z.unknown()),
+      }).default(metadata),
     })
   },
 }

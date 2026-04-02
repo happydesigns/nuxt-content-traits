@@ -28,7 +28,7 @@ export function useCollectionTraits<K extends keyof Collections>(collectionName:
 
   const { data: meta } = useAsyncData(`traits-meta-${String(collectionName)}`, async () => {
     const doc = await queryCollection(collectionName).first()
-    const traits = (doc as { meta?: { traits?: TraitsMeta } } | null)?.meta?.traits
+    const traits = (doc as { _traits?: TraitsMeta } | null)?._traits
     return traits ?? { active: [] as string[], config: {} as Record<string, unknown> }
   })
 
