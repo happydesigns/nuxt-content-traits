@@ -84,9 +84,31 @@ export default defineContentConfig({
 })
 ```
 
-### 2. Consume at Runtime
+### 2. Add Trait Config (Optional)
 
-Use `useCollectionTraits` to access active traits and the merged trait config in your components.
+Trait config lives in `app.config.ts`. You can define global values and per-collection overrides — they are deep-merged and consumed at runtime via `useCollectionTraits`.
+
+```typescript
+// app.config.ts
+export default defineAppConfig({
+  content: {
+    traits: {
+      // Global config per trait, available to all collections
+      dates: { format: 'long' },
+    },
+    collections: {
+      article: {
+        // Per-collection overrides per trait, takes precedence over global
+        dates: { format: 'short' },
+      },
+    },
+  },
+})
+```
+
+### 3. Consume at Runtime
+
+Use `useCollectionTraits` to access the active traits and merged config from `app.config.ts` in your components.
 
 ```vue
 <script setup lang="ts">
@@ -95,35 +117,16 @@ const { data: article } = await useAsyncData('article', () =>
 )
 
 const { activeTraits, hasTrait, traitConfig } = useCollectionTraits('article')
+// traitConfig.dates.format === 'short' (merged from app.config.ts)
 </script>
 
 <template>
   <div>
-    <p v-if="hasTrait('seo')">SEO trait is active</p>
-    <pre>{{ activeTraits }}</pre>
-    <pre>{{ traitConfig }}</pre>
+    <time v-if="hasTrait('dates') && article?.date">
+      {{ article.date }}
+    </time>
   </div>
 </template>
-```
-
-### 3. Add Trait Config (Optional)
-
-Trait config consumed by `useCollectionTraits` lives in `app.config.ts`. You can define global values and per-collection overrides — they are deep-merged at runtime.
-
-```typescript
-// app.config.ts
-export default defineAppConfig({
-  content: {
-    traits: {
-      // Global values available to all collections
-    },
-    collections: {
-      article: {
-        // Per-collection values, takes precedence over global
-      },
-    },
-  },
-})
 ```
 
 ## Contribution
