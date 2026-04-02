@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.1.1
+
+[compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.1.0...v0.1.1)
+
+### 🩹 Fixes
+
+- Lazy-load valibot via createRequire to avoid hard install requirement ([d41f8b1](https://github.com/happydesigns/nuxt-content-traits/commit/d41f8b1))
+
+### 📖 Documentation
+
+- Update readme ([9dcf18c](https://github.com/happydesigns/nuxt-content-traits/commit/9dcf18c))
+- Update README to reflect current API and Valibot support ([b103200](https://github.com/happydesigns/nuxt-content-traits/commit/b103200))
+
+### ❤️ Contributors
+
+- Jan Fröhlich ([@janfrl](https://github.com/janfrl))
+
 ## v0.1.0
 
 [compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.0.2...v0.1.0)
