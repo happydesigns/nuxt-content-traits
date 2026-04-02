@@ -1,6 +1,53 @@
 # Changelog
 
 
+## v0.1.0
+
+[compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.0.2...v0.1.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Replace defineTraitCollection with native defineCollection wrapper ([304c06c](https://github.com/happydesigns/nuxt-content-traits/commit/304c06c))
+- **playground:** ⚠️  Migrate to native wrapper architecture ([586c472](https://github.com/happydesigns/nuxt-content-traits/commit/586c472))
+- ⚠️  Implement defineContentConfig with inline traits registry ([cceea48](https://github.com/happydesigns/nuxt-content-traits/commit/cceea48))
+- Implement automatic type inference for useCollectionTraits ([7e957fb](https://github.com/happydesigns/nuxt-content-traits/commit/7e957fb))
+- Add schema adapter system for Zod and Valibot support ([6380ce4](https://github.com/happydesigns/nuxt-content-traits/commit/6380ce4))
+- Add Valibot as an optional peer dependency ([41fd59a](https://github.com/happydesigns/nuxt-content-traits/commit/41fd59a))
+- **test:** Add unit and integration tests for Valibot support ([6411c0f](https://github.com/happydesigns/nuxt-content-traits/commit/6411c0f))
+- **playground:** Add Valibot demo and update Zod examples ([20f8dbe](https://github.com/happydesigns/nuxt-content-traits/commit/20f8dbe))
+
+### 🩹 Fixes
+
+- Store traits metadata in _traits field to avoid Nuxt Content meta collision ([1edc223](https://github.com/happydesigns/nuxt-content-traits/commit/1edc223))
+
+### 💅 Refactors
+
+- ⚠️  Migrate playground to inline trait registry ([8a2fa5a](https://github.com/happydesigns/nuxt-content-traits/commit/8a2fa5a))
+- **playground:** Reorganize demo layout and shared components ([3e7aaed](https://github.com/happydesigns/nuxt-content-traits/commit/3e7aaed))
+
+### 📖 Documentation
+
+- Update usage instructions for new trait workflow ([035b9b1](https://github.com/happydesigns/nuxt-content-traits/commit/035b9b1))
+
+### ✅ Tests
+
+- Update adapter tests for _traits field rename ([bab4fa9](https://github.com/happydesigns/nuxt-content-traits/commit/bab4fa9))
+
+### 🎨 Styles
+
+- Replace explicit any with Record<string, unknown> in useCollectionTraits ([43401eb](https://github.com/happydesigns/nuxt-content-traits/commit/43401eb))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Replace defineTraitCollection with native defineCollection wrapper ([304c06c](https://github.com/happydesigns/nuxt-content-traits/commit/304c06c))
+- **playground:** ⚠️  Migrate to native wrapper architecture ([586c472](https://github.com/happydesigns/nuxt-content-traits/commit/586c472))
+- ⚠️  Implement defineContentConfig with inline traits registry ([cceea48](https://github.com/happydesigns/nuxt-content-traits/commit/cceea48))
+- ⚠️  Migrate playground to inline trait registry ([8a2fa5a](https://github.com/happydesigns/nuxt-content-traits/commit/8a2fa5a))
+
+### ❤️ Contributors
+
+- Jan Fröhlich ([@janfrl](https://github.com/janfrl))
+
 ## v0.0.2
 
 [compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.0.1...v0.0.2)
