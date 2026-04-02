@@ -31,13 +31,13 @@ describe('zodAdapter', () => {
     expect(merged.shape.title).toBeInstanceOf(z.ZodNumber)
   })
 
-  it('extendWithTraitsMeta adds meta.traits with correct defaults', () => {
+  it('extendWithTraitsMeta adds _traits with correct defaults', () => {
     const metadata = { active: ['seo'], config: { key: 'value' } }
     const schema = zodAdapter.extendWithTraitsMeta(z.object({ title: z.string() }), metadata)
-    expect(schema.shape.meta).toBeDefined()
-    // Parsing without meta should use the injected default
+    expect(schema.shape._traits).toBeDefined()
+    // Parsing without _traits should use the injected default
     const result = schema.parse({ title: 'Hello' })
-    expect(result).toMatchObject({ meta: { traits: { active: ['seo'], config: { key: 'value' } } } })
+    expect(result).toMatchObject({ _traits: { active: ['seo'], config: { key: 'value' } } })
   })
 
   it('extendWithTraitsMeta preserves existing fields', () => {
@@ -76,17 +76,17 @@ describe('valibotAdapter', () => {
     expect((merged.entries.title as { type: string }).type).toBe('number')
   })
 
-  it('extendWithTraitsMeta adds meta entry', () => {
+  it('extendWithTraitsMeta adds _traits entry', () => {
     const metadata = { active: ['seo'], config: { key: 'value' } }
     const schema = valibotAdapter.extendWithTraitsMeta(v.object({ title: v.string() }), metadata)
-    expect(schema.entries.meta).toBeDefined()
+    expect(schema.entries._traits).toBeDefined()
   })
 
-  it('extendWithTraitsMeta meta defaults are applied when meta is absent', () => {
+  it('extendWithTraitsMeta _traits defaults are applied when _traits is absent', () => {
     const metadata = { active: ['dates'], config: {} }
     const schema = valibotAdapter.extendWithTraitsMeta(v.object({ title: v.string() }), metadata)
     const result = v.parse(schema, { title: 'Hello' })
-    expect(result.meta).toEqual({ traits: metadata })
+    expect(result._traits).toEqual(metadata)
   })
 
   it('extendWithTraitsMeta preserves existing entries', () => {
