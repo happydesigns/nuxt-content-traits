@@ -8,7 +8,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "nuxt-content-traits": "workspace:*",
-    "nuxt": "^4.4.2"
+    "nuxt": "^4.4.2",
+    "nuxt-content-traits": "workspace:*"
   }
 }

@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   modules: [
-    'nuxt-content-traits',
     '@nuxt/content',
+    'nuxt-content-traits',
   ],
   devtools: { enabled: true },
   compatibilityDate: 'latest',
