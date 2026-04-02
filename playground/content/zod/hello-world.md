@@ -1,15 +1,10 @@
 ---
-title: Hello World
-description: This is a test article for Nuxt Content Traits.
-date: '2026-03-30'
-dateEnd: '2026-03-31'
+title: Zod SEO Title
+description: Zod SEO description — written in frontmatter, surfaced by the zodSeo trait.
+date: '2026-04-02'
+dateEnd: '2026-04-03'
 ---
 
-# Hello World
+This paragraph is the **markdown body** — parsed and rendered by `<ContentRenderer>` in Vue.
 
-This article tests the **Nuxt Content Traits** module in the playground.
-
-It should have:
-- SEO traits (title, description)
-- Dates traits (date, dateEnd)
-- A trait configuration (ui: { showCalendarIcon: false })
+The fields above (`title`, `description`, `date`, `dateEnd`) come from the YAML frontmatter. They are validated and exposed by the `zodSeo` and `zodDates` traits defined with **Zod** schemas.
