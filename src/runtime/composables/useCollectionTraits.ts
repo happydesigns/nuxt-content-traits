@@ -3,18 +3,14 @@ import { useAsyncData, useAppConfig, queryCollection } from '#imports'
 import { defu } from 'defu'
 import type { Collections } from '@nuxt/content'
 import type { AppConfig } from 'nuxt/schema'
-
-interface TraitsMeta {
-  active: string[]
-  config: Record<string, unknown>
-}
+import type { TraitsMeta } from '../adapters/types'
 
 /**
  * Type helper to extract and merge trait configurations from AppConfig.
  */
 export type InferTraitConfig<K extends keyof Collections>
-  = (AppConfig extends { content?: { traits?: infer T } } ? T : Record<string, unknown>)
-    & (AppConfig extends { content?: { collections?: { [P in K]?: infer C } } } ? C : Record<string, unknown>)
+  = (AppConfig extends { content: { traits?: infer T } } ? T : Record<string, unknown>)
+    & (AppConfig extends { content: { collections?: { [P in K]?: infer C } } } ? C : Record<string, unknown>)
 
 /**
  * Provides reactive trait configuration for a Nuxt Content collection.

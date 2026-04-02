@@ -1,0 +1,32 @@
+export interface TraitsMeta {
+  active: string[]
+  config: Record<string, unknown>
+}
+
+export interface SchemaAdapter<TSchema = unknown> {
+  emptyObject(): TSchema
+  merge(base: TSchema, extra: TSchema): TSchema
+  extendWithTraitsMeta(schema: TSchema, metadata: TraitsMeta): TSchema
+}
+
+/**
+ * Minimal structural type for Zod v4 object schemas.
+ * Only describes the properties accessed by adapter code.
+ */
+export type ZodObjectSchema = {
+  readonly _zod: { def: { type: string } }
+  merge(other: ZodObjectSchema): ZodObjectSchema
+  extend(shape: Record<string, unknown>): ZodObjectSchema
+}
+
+/**
+ * Minimal structural type for Valibot object schemas.
+ * Only describes the properties accessed by adapter code.
+ */
+export type ValibotObjectSchema = {
+  readonly kind: 'schema'
+  readonly type: 'object' | 'loose_object'
+  readonly entries: Record<string, unknown>
+}
+
+export type AnyObjectSchema = ZodObjectSchema | ValibotObjectSchema
