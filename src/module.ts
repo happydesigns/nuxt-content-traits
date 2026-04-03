@@ -18,6 +18,11 @@ export default defineNuxtModule<ModuleOptions>({
         from: resolver.resolve('./runtime/utils'),
       },
       {
+        name: 'defineCollection',
+        as: 'defineCollection',
+        from: resolver.resolve('./runtime/utils'),
+      },
+      {
         name: 'defineContentConfig',
         as: 'defineContentConfig',
         from: resolver.resolve('./runtime/utils'),

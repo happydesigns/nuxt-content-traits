@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import * as v from 'valibot'
-import { defineContentConfig, defineTrait } from 'nuxt-content-traits/utils'
+import { defineCollection, defineContentConfig, defineTrait } from 'nuxt-content-traits/utils'
 
 export default defineContentConfig({
   traits: {
@@ -30,15 +30,15 @@ export default defineContentConfig({
     }),
   },
   collections: {
-    zodArticle: {
+    zodArticle: defineCollection({
       type: 'page',
       source: 'zod/**',
       traits: ['zodDates', 'zodSeo'],
-    },
-    valibotArticle: {
+    }),
+    valibotArticle: defineCollection({
       type: 'page',
       source: 'valibot/**',
       traits: ['valibotDates', 'valibotSeo'],
-    },
+    }),
   },
 })

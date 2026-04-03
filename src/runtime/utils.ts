@@ -49,6 +49,15 @@ type ContentCollectionInput = Omit<BaseCollectionConfig, 'schema'> & {
 }
 
 /**
+ * Defines a content collection with optional trait references.
+ * A typed wrapper around Nuxt Content's native `defineCollection` that adds a `traits` property.
+ * @param config - Collection config extended with an optional `traits` array of trait registry keys
+ */
+export function defineCollection(config: ContentCollectionInput): ContentCollectionInput {
+  return config
+}
+
+/**
  * A wrapper around Nuxt Content's native `defineContentConfig` that adds a top-level
  * traits registry. Collections can reference traits by their registry key (string).
  * Supports Zod v4 and Valibot schemas. All traits within a collection must use the same validator.
@@ -56,7 +65,7 @@ type ContentCollectionInput = Omit<BaseCollectionConfig, 'schema'> & {
  */
 export function defineContentConfig(
   config: Omit<BaseContentConfig, 'collections'> & {
-    traits?: Record<string, TraitDefinition<AnyObjectSchema>>
+    traits?: Record<string, { schema: AnyObjectSchema }>
     collections?: Record<string, ContentCollectionInput>
   },
 ): ReturnType<typeof _defineContentConfig> {
