@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.2
+
+[compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.1.1...v0.1.2)
+
+### 🚀 Enhancements
+
+- Add defineCollection wrapper to match Nuxt Content's native API pattern ([0df6d09](https://github.com/happydesigns/nuxt-content-traits/commit/0df6d09))
+
+### ❤️ Contributors
+
+- Jan Fröhlich ([@janfrl](https://github.com/janfrl))
+
 ## v0.1.1
 
 [compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.1.0...v0.1.1)
