@@ -1,12 +1,6 @@
-export interface TraitsMeta {
-  active: string[]
-  config: Record<string, unknown>
-}
-
 export interface SchemaAdapter<TSchema = unknown> {
   emptyObject(): TSchema
   merge(base: TSchema, extra: TSchema): TSchema
-  extendWithTraitsMeta(schema: TSchema, metadata: TraitsMeta): TSchema
 }
 
 /**

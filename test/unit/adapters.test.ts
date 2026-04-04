@@ -30,24 +30,6 @@ describe('zodAdapter', () => {
     // The merged title field should be a ZodNumber (from extra)
     expect(merged.shape.title).toBeInstanceOf(z.ZodNumber)
   })
-
-  it('extendWithTraitsMeta adds _traits with correct defaults', () => {
-    const metadata = { active: ['seo'], config: { key: 'value' } }
-    const schema = zodAdapter.extendWithTraitsMeta(z.object({ title: z.string() }), metadata)
-    expect(schema.shape._traits).toBeDefined()
-    // Parsing without _traits should use the injected default
-    const result = schema.parse({ title: 'Hello' })
-    expect(result).toMatchObject({ _traits: { active: ['seo'], config: { key: 'value' } } })
-  })
-
-  it('extendWithTraitsMeta preserves existing fields', () => {
-    const schema = zodAdapter.extendWithTraitsMeta(
-      z.object({ title: z.string() }),
-      { active: [], config: {} },
-    )
-    const result = schema.parse({ title: 'Hello' })
-    expect(result).toMatchObject({ title: 'Hello' })
-  })
 })
 
 // ---------------------------------------------------------------------------
@@ -74,28 +56,6 @@ describe('valibotAdapter', () => {
     const merged = valibotAdapter.merge(base, extra)
     // The merged title entry should be the number schema from extra
     expect((merged.entries.title as { type: string }).type).toBe('number')
-  })
-
-  it('extendWithTraitsMeta adds _traits entry', () => {
-    const metadata = { active: ['seo'], config: { key: 'value' } }
-    const schema = valibotAdapter.extendWithTraitsMeta(v.object({ title: v.string() }), metadata)
-    expect(schema.entries._traits).toBeDefined()
-  })
-
-  it('extendWithTraitsMeta _traits defaults are applied when _traits is absent', () => {
-    const metadata = { active: ['dates'], config: {} }
-    const schema = valibotAdapter.extendWithTraitsMeta(v.object({ title: v.string() }), metadata)
-    const result = v.parse(schema, { title: 'Hello' })
-    expect(result._traits).toEqual(metadata)
-  })
-
-  it('extendWithTraitsMeta preserves existing entries', () => {
-    const schema = valibotAdapter.extendWithTraitsMeta(
-      v.object({ title: v.string() }),
-      { active: [], config: {} },
-    )
-    const result = v.parse(schema, { title: 'Hello' })
-    expect(result.title).toBe('Hello')
   })
 })
 
