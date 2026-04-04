@@ -76,6 +76,7 @@ export function defineContentConfig(
   )
 
   const processedCollections: Record<string, ReturnType<typeof _defineCollection>> = {}
+  const collectionsMeta: Record<string, { active: string[] }> = {}
 
   for (const [colName, colConfig] of Object.entries(rawCollections)) {
     const { schema: baseSchema, traits: traitRefs = [], ...colRest } = colConfig
@@ -114,16 +115,15 @@ export function defineContentConfig(
       mergedSchema = adapter.merge(mergedSchema, trait.schema)
     }
 
-    const finalSchema = adapter.extendWithTraitsMeta(mergedSchema, {
-      active: activeTraits,
-      config: {},
-    })
-
-    processedCollections[colName] = _defineCollection({ ...colRest, schema: finalSchema } as Parameters<typeof _defineCollection>[0])
+    collectionsMeta[colName] = { active: activeTraits }
+    processedCollections[colName] = _defineCollection({ ...colRest, schema: mergedSchema } as Parameters<typeof _defineCollection>[0])
   }
+
+  // Expose trait metadata via globalThis so the Vite virtual module (#content-traits-meta) can read it
+  ;(globalThis as Record<string, unknown>).__nuxtContentTraitsMeta = collectionsMeta
 
   return _defineContentConfig({ ...rest, collections: processedCollections } as BaseContentConfig)
 }
 
-export type { AnyObjectSchema, SchemaAdapter, TraitsMeta } from './adapters/types'
+export type { AnyObjectSchema, SchemaAdapter } from './adapters/types'
 export { zodAdapter, valibotAdapter, detectAdapter } from './adapters/index'

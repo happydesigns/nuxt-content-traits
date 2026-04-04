@@ -8,8 +8,23 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-content-traits',
     configKey: 'contentTraits',
   },
-  setup() {
+  setup(_, nuxt) {
     const resolver = createResolver(import.meta.url)
+    nuxt.hook('vite:extendConfig', (config) => {
+      config.plugins = config.plugins ?? []
+      ;(config.plugins as unknown[]).push({
+        name: 'nuxt-content-traits:meta',
+        resolveId(id: string) {
+          if (id === '#content-traits-meta') return '\0content-traits-meta'
+        },
+        load(id: string) {
+          if (id === '\0content-traits-meta') {
+            const data = (globalThis as Record<string, unknown>).__nuxtContentTraitsMeta ?? {}
+            return `export default ${JSON.stringify(data)}`
+          }
+        },
+      })
+    })
 
     addImports([
       {
