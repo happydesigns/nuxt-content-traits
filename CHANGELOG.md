@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.1.3
+
+[compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.1.2...v0.1.3)
+
+### 🚀 Enhancements
+
+- Expose trait metadata via globalThis and Vite virtual module ([85af455](https://github.com/happydesigns/nuxt-content-traits/commit/85af455))
+
+### 💅 Refactors
+
+- Remove extendWithTraitsMeta from schema adapters ([f53d4c3](https://github.com/happydesigns/nuxt-content-traits/commit/f53d4c3))
+
+### ✅ Tests
+
+- Add unit tests for defineContentConfig trait metadata ([aa86748](https://github.com/happydesigns/nuxt-content-traits/commit/aa86748))
+- Replace deprecated toMatchTypeOf with toExtend ([2ec1355](https://github.com/happydesigns/nuxt-content-traits/commit/2ec1355))
+
+### ❤️ Contributors
+
+- Jan Fröhlich ([@janfrl](https://github.com/janfrl))
+
 ## v0.1.2
 
 [compare changes](https://github.com/happydesigns/nuxt-content-traits/compare/v0.1.1...v0.1.2)
